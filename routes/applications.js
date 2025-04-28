@@ -10,14 +10,14 @@ const router  = express.Router();
 // ─────────────────────────────────────────────────────────────
 router.post('/', authenticateToken, async (req, res) => {
   const userId = req.user.id;
-  const { room_id, special_needs, additional_notes, academic_year, semester } = req.body;
+  const { room_id, status, application_date} = req.body;
 
   try {
     const result = await db.query(
-      `INSERT INTO applications (user_id, room_id, special_needs, additional_notes, academic_year, semester)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO applications (student_id, room_id, status, application_date)
+       VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [userId, room_id, special_needs, additional_notes, academic_year, semester]
+      [userId, room_id, status, application_date]
     );
     res.json(result.rows[0]);
   } catch (err) {
