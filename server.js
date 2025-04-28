@@ -30,8 +30,12 @@ app.use('/api/hostels',     hostelsRoutes);
 app.use('/api/applications',applicationsRoutes);
 
 // catch-all: serve index.html for non-API routes
-app.get(/^(?!\/api\/).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend/index.html'));
+// app.get(/^(?!\/api\/).*/, (req, res) => {
+//   res.sendFile(path.join(__dirname, 'frontend/index.html'));
+// });
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
 });
 
 const PORT = process.env.PORT || 5000;
