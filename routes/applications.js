@@ -71,13 +71,11 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
          u.email AS email,
          r.id   AS room_id,
          r.room_number,
-         r.room_type,
-         h.id   AS hostel_id,
-         h.name AS hostel_name
+         r.room_type, 
+         r.price
        FROM applications a
        JOIN users    u ON u.id = a.student_id
        LEFT JOIN rooms   r ON r.id = a.room_id
-       LEFT JOIN hostels h ON h.id = r.hostel_id
        ORDER BY a.application_date DESC`
     );
     res.json(q.rows);
