@@ -36,19 +36,17 @@ router.get('/my-applications', authenticateToken, async (req, res) => {
       `SELECT
          a.id,
          a.status,
-         a.created_at,
-         a.special_needs,
-         a.additional_notes,
-         a.academic_year,
-         a.semester,
+         a.processed_by,
+         a.processed_date,
+         a.application_date,
          r.id   AS room_id,
          r.room_number,
          r.room_type,
-         r.price_per_semester
+         r.price
        FROM applications a
        LEFT JOIN rooms r ON r.id = a.room_id
-       WHERE a.user_id = $1
-       ORDER BY a.created_at DESC`,
+       WHERE a.student_id = $1
+       ORDER BY a.application_date DESC`,
       [userId]
     );
     res.json(q.rows);
