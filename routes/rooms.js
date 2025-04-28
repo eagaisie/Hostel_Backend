@@ -6,9 +6,11 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const result = await db.query(`
-      SELECT id, room_number, room_type, description, occupancy_limit, price_per_semester, image_url
-      FROM rooms
+      SELECT * FROM rooms
     `);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'No rooms found' });
+    }
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching rooms:', err);
@@ -21,8 +23,7 @@ router.get('/:id', async (req, res) => {
   const roomId = parseInt(req.params.id, 10);
   try {
     const result = await db.query(
-      `SELECT id, room_number, room_type, description, occupancy_limit, price_per_semester, image_url
-       FROM rooms WHERE id = $1`,
+      `SELECT * FROM rooms WHERE id = $1`,
       [roomId]
     );
     if (result.rowCount === 0) {
@@ -55,7 +56,7 @@ router.post('/', async (req, res) => {
   try {
     console.log('Creating room with data:', req.body);
     const result = await db.query(
-      `INSERT INTO rooms (room_number, room_type, description, occupancy_limit, price_per_semester, image_url)
+      `INSERT INTO rooms (room_number, room_type, description, occupancy, price, image_url)
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [room_number, room_type, description, occupancy_limit, price_per_semester, image_url]
     );
