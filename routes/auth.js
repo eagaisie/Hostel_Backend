@@ -61,11 +61,11 @@ router.post('/login', async (req, res) => {
     );
 
     // Send as HTTP-only cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      sameSite: 'lax'
-    });
-    res.json({ user });
+    // res.cookie('token', token, {
+    //   httpOnly: true,
+    //   sameSite: 'lax'
+    // });
+    res.status(200).json({ user, token });
   } catch (err) {
     console.error('Error logging in:', err);
     res.status(500).json({ message: 'Internal server error' });
@@ -74,7 +74,7 @@ router.post('/login', async (req, res) => {
 
 // GET CURRENT USER: returns payload from JWT
 router.get('/me', (req, res) => {
-  const token = req.cookies.token;
+  const token = req.headers.authorization.split(' ')[1];
   if (!token) return res.sendStatus(401);
   jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
     if (err) return res.sendStatus(403);
