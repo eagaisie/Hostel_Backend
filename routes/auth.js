@@ -74,9 +74,9 @@ router.post('/login', async (req, res) => {
 
 // GET CURRENT USER: returns payload from JWT
 router.get('/me', (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
+  const token = req.header("Authorization");
   if (!token) return res.sendStatus(401);
-  jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+  jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET, (err, payload) => {
     if (err) return res.sendStatus(403);
     const { id, email, role } = payload;
     res.json({ id, email, role });
