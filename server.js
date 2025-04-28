@@ -17,6 +17,15 @@ app.use(cors({
   origin: true,  // Allow all origins during development
   credentials: true
 }));
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`, {
+    body: req.body,
+    auth: req.headers.authorization
+  });
+  next();
+});
+
 app.use(express.json());
 app.use(cookieParser());
 
