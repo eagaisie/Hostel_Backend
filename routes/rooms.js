@@ -38,17 +38,18 @@ router.get('/:id', async (req, res) => {
 
 // POST create a new room (admin only)
 router.post('/', async (req, res) => {
-  const { room_number, room_type, description, occupancy_limit, price_per_semester, image_url } = req.body;
+  const { room_number, room_type, description, occupancy, price, status } = req.body;
   
   // Validate required fields
-  if (!room_number || !room_type || !occupancy_limit || !price_per_semester) {
+  if (!room_number || !room_type || !occupancy || !price || !status) {
     return res.status(400).json({ 
       message: 'Missing required fields',
       details: {
         room_number: !room_number,
         room_type: !room_type,
-        occupancy_limit: !occupancy_limit,
-        price_per_semester: !price_per_semester
+        occupancy: !occupancy,
+        price: !price,
+        status: !status
       }
     });
   }
@@ -56,9 +57,9 @@ router.post('/', async (req, res) => {
   try {
     console.log('Creating room with data:', req.body);
     const result = await db.query(
-      `INSERT INTO rooms (room_number, room_type, description, occupancy, price, image_url)
+      `INSERT INTO rooms (room_number, room_type, description, occupancy, price, status)
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [room_number, room_type, description, occupancy_limit, price_per_semester, image_url]
+      [room_number, room_type, description, occupancy, price, status]
     );
     console.log('Room created successfully:', result.rows[0]);
     res.status(201).json(result.rows[0]);
