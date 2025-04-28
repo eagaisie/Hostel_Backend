@@ -65,20 +65,20 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
       `SELECT
          a.id,
          a.status,
-         a.created_at,
+         a.application_date,
          u.id   AS user_id,
-         u.name AS user_name,
-         u.email AS user_email,
+         u.name AS name,
+         u.email AS email,
          r.id   AS room_id,
          r.room_number,
          r.room_type,
          h.id   AS hostel_id,
          h.name AS hostel_name
        FROM applications a
-       JOIN users    u ON u.id = a.user_id
+       JOIN users    u ON u.id = a.student_id
        LEFT JOIN rooms   r ON r.id = a.room_id
        LEFT JOIN hostels h ON h.id = r.hostel_id
-       ORDER BY a.created_at DESC`
+       ORDER BY a.application_date DESC`
     );
     res.json(q.rows);
   } catch (err) {
